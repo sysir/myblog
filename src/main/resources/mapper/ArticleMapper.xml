@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.myblog.dao.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.qf.myblog.pojo.Article" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="star" property="star" jdbcType="INTEGER" />
+    <result column="comment" property="comment" jdbcType="INTEGER" />
+    <result column="visit" property="visit" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qf.myblog.pojo.Article" >
+    insert into t_article (id, title, author, 
+      sort, time, star, 
+      comment, visit, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{star,jdbcType=INTEGER}, 
+      #{comment,jdbcType=INTEGER}, #{visit,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qf.myblog.pojo.Article" >
+    update t_article
+    set title = #{title,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      star = #{star,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=INTEGER},
+      visit = #{visit,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, title, author, sort, time, star, comment, visit, content
+    from t_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="getVisitAndCount" resultMap="BaseResultMap" >
+    select id, title, author, sort, time, star, comment, visit, content
+    from t_article group by title order by visit desc
+  </select>
+  <select id="selectLog" resultMap="BaseResultMap" >
+    SELECT DISTINCT id FROM t_article
+  </select>
+    <select id="selectSort" resultMap="BaseResultMap" >
+    SELECT DISTINCT sort FROM t_article
+  </select>
+    <select id="selectTitle" resultMap="BaseResultMap">
+    SELECT DISTINCT title FROM t_article
+  </select>
+  <select id="selectSortAndCount" resultType="article">
+    SELECT  sort,COUNT(sort) countsort FROM t_article GROUP BY sort
+  </select>
+  <update id="updataStar" parameterType="integer">
+    update t_article  set  star=star+1 where id=#{value}
+  </update>
+  <select id="selectBySort" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT id, title, author, sort, TIME, star, COMMENT, visit, content
+    FROM t_article
+    WHERE sort=#{value}
+  </select>
+
+  <select id="selectAll" resultType="article" parameterType="java.lang.String">
+    SELECT id, title, author, sort, time, star, comment, visit, content
+    FROM t_article
+  </select>
+    <select id="getSortAndCount" resultMap="BaseResultMap" >
+    SELECT  sort,COUNT(sort) countsort FROM t_article GROUP BY sort
+  </select>
+    <select id="selectpre" resultMap="BaseResultMap">
+    SELECT title FROM t_article
+  </select>
+    <select id="selectnext" resultMap="BaseResultMap">
+    SELECT  title FROM t_article
+  </select>
+
+
+
+
+</mapper>
